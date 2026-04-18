@@ -1,0 +1,5 @@
+zone,volunteers_deployed,volunteers_needed,need_type,urgency_notes
+Zone A,2,10,Medical,Critical shortage of medical staff
+Zone B,8,4,Logistics,Overstaffed significantly
+Zone C,1,8,Education,Children without teachers for 2 weeks
+Zone D,5,5,Medical,Adequate staffing
