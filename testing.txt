@@ -1,0 +1,35 @@
+
+Problem statement 5(Smart resource allocation):
+
+It is not about lack of resources. We are not solving lack of resources. Currently we want to fix the misallocation of the resources
+like x has this amount of resources how much resources it needs. We need to get that the urgency is needed or not.
+
+like we get data from a program we need to find them to get the volunteer i.e, how many members are needed
+
+like we need the handle the misallocation that ends happening 
+
+A good solution will have:
+Good data aggregation and structuring 
+we need heapmaps
+and smart matching engine with historical and other parameters like(urgency,skills,need of volunteers)
+we need to create a mechanism for this
+
+we need to refrain from listing platform
+matching people is not the problem
+we need smart matching
+
+dashboard making 
+
+
+curl "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=AIzaSyACu1tqFumpLq9ju_hTCruOnCuj4-yEZnc" \
+  -H "Content-Type: application/json" \
+  -X POST \
+  -d '{
+    "contents": [
+      {
+        "parts": [
+          { "text": "Test response" }
+        ]
+      }
+    ]
+  }'

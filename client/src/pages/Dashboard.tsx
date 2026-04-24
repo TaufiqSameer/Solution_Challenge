@@ -30,67 +30,122 @@ const Dashboard = () => {
   const [modal, setModal] = useState<ModalType>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setFileName(file.name);
-    setLoading(true);
-    const formData = new FormData();
-    formData.append("file", file);
+    const file = e.target.files?.[0]
+    if (!file) return
+    setFileName(file.name)
+    setLoading(true)
+  
     try {
-      const res = await axios.post(
-        "http://localhost:3001/api/upload",
-        formData,
-      );
-      const fetchedZones: Zone[] = res.data.zones;
-      setZones(fetchedZones);
+      // Read file as text
+      const csvText = await file.text()
+      const API_URL = import.meta.env.VITE_API_URL || "";
+
+      const res = await axios.post(`${API_URL}/api/upload`, { csvText });
+      const fetchedZones: Zone[] = res.data.zones
+      setZones(fetchedZones)
+  
       const critical = [...fetchedZones].sort(
-        (a, b) => b.urgencyScore - a.urgencyScore,
-      )[0];
+        (a, b) => b.urgencyScore - a.urgencyScore
+      )[0]
       const overStaffed = [...fetchedZones].sort(
-        (a, b) =>
-          b.volunteersDeployed -
-          b.volunteersNeeded -
-          (a.volunteersDeployed - a.volunteersNeeded),
-      )[0];
-
-      let prescriptionText = "";
+        (a, b) => (b.volunteersDeployed - b.volunteersNeeded) -
+          (a.volunteersDeployed - a.volunteersNeeded)
+      )[0]
+  
+      let prescriptionText = ""
       if (critical && overStaffed && critical.name !== overStaffed.name) {
-        const gap = critical.volunteersNeeded - critical.volunteersDeployed;
-        prescriptionText = `Move ${gap} volunteers from ${overStaffed.name} to ${critical.name} immediately. ${critical.name} has a ${critical.needType} gap with urgency score ${critical.urgencyScore}/10.`;
+        const gap = critical.volunteersNeeded - critical.volunteersDeployed
+        prescriptionText = `Move ${gap} volunteers from ${overStaffed.name} to ${critical.name} immediately. ${critical.name} has a ${critical.needType} gap with urgency score ${critical.urgencyScore}/10.`
       } else if (critical) {
-        const gap = critical.volunteersNeeded - critical.volunteersDeployed;
-        prescriptionText = `${critical.name} needs ${gap} more volunteers urgently. Score: ${critical.urgencyScore}/10. Need: ${critical.needType}.`;
+        const gap = critical.volunteersNeeded - critical.volunteersDeployed
+        prescriptionText = `${critical.name} needs ${gap} more volunteers urgently. Score: ${critical.urgencyScore}/10. Need: ${critical.needType}.`
       }
-
-      setPrescription(prescriptionText);
-
-      // ── Firebase ──────────────────────────────
+  
+      setPrescription(prescriptionText)
+  
+      // Firebase
       try {
-        const userId = auth.currentUser?.uid || "anonymous";
-        const fileUrl = await uploadReport(file, userId);
-        console.log("File saved to Storage:", fileUrl);
-
-        const sessionId = await saveSession(
-          file.name,
-          fetchedZones,
-          prescriptionText,
-        );
-        console.log("Session saved to Firestore:", sessionId);
-
+        const userId = auth.currentUser?.uid || "anonymous"
+        // const fileUrl = await uploadReport(file, userId)
+        // console.log("File saved to Storage:", fileUrl)
+        const sessionId = await saveSession(file.name, fetchedZones, prescriptionText)
+        console.log("Session saved to Firestore:", sessionId)
         if (critical && prescriptionText) {
-          await logAction(sessionId, prescriptionText, critical.name);
+          await logAction(sessionId, prescriptionText, critical.name)
         }
       } catch (fbErr) {
-        console.warn("Firebase save failed (non-critical):", fbErr);
+        console.warn("Firebase save failed:", fbErr)
       }
-      // ─────────────────────────────────────────
+  
     } catch (err: any) {
-      console.error(err);
-      alert(err?.response?.data?.message || "Backend error");
+      console.error(err)
+      alert(err?.response?.data?.error || "Failed to process file")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
+  // const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (!file) return;
+  //   setFileName(file.name);
+  //   setLoading(true);
+  //   const formData = new FormData();
+  //   formData.append("file", file);
+  //   try {
+  //     const res = await axios.post(
+  //       "http://localhost:3001/api/upload",
+  //       formData,
+  //     );
+  //     const fetchedZones: Zone[] = res.data.zones;
+  //     setZones(fetchedZones);
+  //     const critical = [...fetchedZones].sort(
+  //       (a, b) => b.urgencyScore - a.urgencyScore,
+  //     )[0];
+  //     const overStaffed = [...fetchedZones].sort(
+  //       (a, b) =>
+  //         b.volunteersDeployed -
+  //         b.volunteersNeeded -
+  //         (a.volunteersDeployed - a.volunteersNeeded),
+  //     )[0];
+
+  //     let prescriptionText = "";
+  //     if (critical && overStaffed && critical.name !== overStaffed.name) {
+  //       const gap = critical.volunteersNeeded - critical.volunteersDeployed;
+  //       prescriptionText = `Move ${gap} volunteers from ${overStaffed.name} to ${critical.name} immediately. ${critical.name} has a ${critical.needType} gap with urgency score ${critical.urgencyScore}/10.`;
+  //     } else if (critical) {
+  //       const gap = critical.volunteersNeeded - critical.volunteersDeployed;
+  //       prescriptionText = `${critical.name} needs ${gap} more volunteers urgently. Score: ${critical.urgencyScore}/10. Need: ${critical.needType}.`;
+  //     }
+
+  //     setPrescription(prescriptionText);
+
+  //     // ── Firebase ──────────────────────────────
+  //     try {
+  //       const userId = auth.currentUser?.uid || "anonymous";
+  //       const fileUrl = await uploadReport(file, userId);
+  //       console.log("File saved to Storage:", fileUrl);
+
+  //       const sessionId = await saveSession(
+  //         file.name,
+  //         fetchedZones,
+  //         prescriptionText,
+  //       );
+  //       console.log("Session saved to Firestore:", sessionId);
+
+  //       if (critical && prescriptionText) {
+  //         await logAction(sessionId, prescriptionText, critical.name);
+  //       }
+  //     } catch (fbErr) {
+  //       console.warn("Firebase save failed (non-critical):", fbErr);
+  //     }
+  //     // ─────────────────────────────────────────
+  //   } catch (err: any) {
+  //     console.error(err);
+  //     alert(err?.response?.data?.message || "Backend error");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const criticalZone =
     [...zones].sort((a, b) => b.urgencyScore - a.urgencyScore)[0] ?? null;

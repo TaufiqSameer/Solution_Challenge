@@ -8,52 +8,50 @@ const zoneCoordinates: Record<string, { lat: number; lng: number }> = {
   Dadar: { lat: 19.0176, lng: 72.8562 },
   Kurla: { lat: 19.0728, lng: 72.8826 },
   Thane: { lat: 19.2183, lng: 72.9781 },
-};
+}
+
 const router = express.Router()
 const upload = multer({ storage: multer.memoryStorage() })
 
 router.post('/upload', upload.single('file'), async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No file uploaded' })
+    // Accept either JSON { csvText } or file upload
+    let csvText: string
+
+    if (req.file) {
+      csvText = req.file.buffer.toString('utf-8')
+    } else if (req.body?.csvText) {
+      csvText = req.body.csvText
+    } else {
+      return res.status(400).json({ error: 'No file or csvText provided' })
     }
 
-    const csvText = req.file.buffer.toString('utf-8')
-    const result = await parseReportWithGemini(csvText);
-
+    const result = await parseReportWithGemini(csvText)
 
     const zonesWithCoords = result.zones.map((z: any) => {
       const fallback = {
         lat: 19.0760 + (Math.random() - 0.5) * 0.1,
         lng: 72.8777 + (Math.random() - 0.5) * 0.1,
-      };
-    
-    
-      let lat = z.lat;
-      let lng = z.lng;
-    
+      }
+
+      let lat = z.lat
+      let lng = z.lng
+
       if (!lat || !lng || isNaN(lat) || isNaN(lng)) {
-        const coords = zoneCoordinates[z.name?.trim()];
+        const coords = zoneCoordinates[z.name?.trim()]
         if (coords) {
-          lat = coords.lat;
-          lng = coords.lng;
+          lat = coords.lat
+          lng = coords.lng
         } else {
-          lat = fallback.lat;
-          lng = fallback.lng;
+          lat = fallback.lat
+          lng = fallback.lng
         }
       }
-    
-      return {
-        ...z,
-        lat,
-        lng,
-      };
-    });
-    
-    res.json({
-      ...result,
-      zones: zonesWithCoords,
-    });
+
+      return { ...z, lat, lng }
+    })
+
+    res.json({ ...result, zones: zonesWithCoords })
 
   } catch (err) {
     console.error(err)
