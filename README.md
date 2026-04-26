@@ -61,11 +61,11 @@ Some zones remain understaffed while others are overstaffed, leading to ineffici
 
 ### Heatmap
 
-![Heatmap](screenshots/dataupload.png)
+![Heatmap](screenshots/maps.png)
 
 ### AI Prescription
 
-![Prescription](screenshots/info.png)
+![Prescription](screenshots/zone.png)
 
 ### Historical Trends
 

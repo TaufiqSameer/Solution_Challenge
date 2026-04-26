@@ -7,7 +7,7 @@ import {
   FileText,
   ChevronRight,
   TrendingUp,
-  LogOut
+  LogOut,
 } from "lucide-react";
 import type { Zone } from "../types";
 import axios from "axios";
@@ -16,8 +16,8 @@ import WeeklySummaryModal from "../components/WeeklySummaryModal";
 import HistoricalTrendsModal from "../components/HistoricalTrendsModal";
 import "leaflet/dist/leaflet.css";
 import { saveSession, logAction } from "../services/firestore";
-import { uploadReport } from "../services/storage";
-import { auth } from "../firebase";
+// import { uploadReport } from "../services/storage";
+// import { auth } from "../firebase";
 import { logout } from "../services/auth";
 
 type ModalType = "summary" | "trends" | null;
@@ -30,60 +30,65 @@ const Dashboard = () => {
   const [modal, setModal] = useState<ModalType>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    setFileName(file.name)
-    setLoading(true)
-  
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setFileName(file.name);
+    setLoading(true);
+
     try {
       // Read file as text
-      const csvText = await file.text()
+      const csvText = await file.text();
       const API_URL = import.meta.env.VITE_API_URL || "";
 
       const res = await axios.post(`${API_URL}/api/upload`, { csvText });
-      const fetchedZones: Zone[] = res.data.zones
-      setZones(fetchedZones)
-  
+      const fetchedZones: Zone[] = res.data.zones;
+      setZones(fetchedZones);
+
       const critical = [...fetchedZones].sort(
-        (a, b) => b.urgencyScore - a.urgencyScore
-      )[0]
+        (a, b) => b.urgencyScore - a.urgencyScore,
+      )[0];
       const overStaffed = [...fetchedZones].sort(
-        (a, b) => (b.volunteersDeployed - b.volunteersNeeded) -
-          (a.volunteersDeployed - a.volunteersNeeded)
-      )[0]
-  
-      let prescriptionText = ""
+        (a, b) =>
+          b.volunteersDeployed -
+          b.volunteersNeeded -
+          (a.volunteersDeployed - a.volunteersNeeded),
+      )[0];
+
+      let prescriptionText = "";
       if (critical && overStaffed && critical.name !== overStaffed.name) {
-        const gap = critical.volunteersNeeded - critical.volunteersDeployed
-        prescriptionText = `Move ${gap} volunteers from ${overStaffed.name} to ${critical.name} immediately. ${critical.name} has a ${critical.needType} gap with urgency score ${critical.urgencyScore}/10.`
+        const gap = critical.volunteersNeeded - critical.volunteersDeployed;
+        prescriptionText = `Move ${gap} volunteers from ${overStaffed.name} to ${critical.name} immediately. ${critical.name} has a ${critical.needType} gap with urgency score ${critical.urgencyScore}/10.`;
       } else if (critical) {
-        const gap = critical.volunteersNeeded - critical.volunteersDeployed
-        prescriptionText = `${critical.name} needs ${gap} more volunteers urgently. Score: ${critical.urgencyScore}/10. Need: ${critical.needType}.`
+        const gap = critical.volunteersNeeded - critical.volunteersDeployed;
+        prescriptionText = `${critical.name} needs ${gap} more volunteers urgently. Score: ${critical.urgencyScore}/10. Need: ${critical.needType}.`;
       }
-  
-      setPrescription(prescriptionText)
-  
+
+      setPrescription(prescriptionText);
+
       // Firebase
       try {
-        const userId = auth.currentUser?.uid || "anonymous"
+        // const _userId = auth.currentUser?.uid || "anonymous"
         // const fileUrl = await uploadReport(file, userId)
         // console.log("File saved to Storage:", fileUrl)
-        const sessionId = await saveSession(file.name, fetchedZones, prescriptionText)
-        console.log("Session saved to Firestore:", sessionId)
+        const sessionId = await saveSession(
+          file.name,
+          fetchedZones,
+          prescriptionText,
+        );
+        console.log("Session saved to Firestore:", sessionId);
         if (critical && prescriptionText) {
-          await logAction(sessionId, prescriptionText, critical.name)
+          await logAction(sessionId, prescriptionText, critical.name);
         }
       } catch (fbErr) {
-        console.warn("Firebase save failed:", fbErr)
+        console.warn("Firebase save failed:", fbErr);
       }
-  
     } catch (err: any) {
-      console.error(err)
-      alert(err?.response?.data?.error || "Failed to process file")
+      console.error(err);
+      alert(err?.response?.data?.error || "Failed to process file");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
   // const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
   //   const file = e.target.files?.[0];
   //   if (!file) return;
@@ -179,10 +184,14 @@ const Dashboard = () => {
       <aside className="w-72 bg-[#161920] flex flex-col border-r border-white/5">
         <div className="p-8">
           <h1 className="text-2xl font-black tracking-tight text-white flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shrink-0">
               <ShieldAlert size={20} />
             </div>
-            Resource<span className="text-blue-500">IQ</span>
+
+            <span className="flex items-baseline gap-1">
+              <span>Resource</span>
+              <span className="text-blue-500">IQ</span>
+            </span>
           </h1>
         </div>
 
