@@ -67,35 +67,3 @@ server/uploads/
 # Vercel
 # ----------------------
 .vercel
-# Environment files (VERY IMPORTANT)
-.env
-.env.*
-!.env.example
-
-# Node modules
-node_modules/
-
-# Build outputs
-dist/
-build/
-
-# Logs
-*.log
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Editor files
-.vscode/
-.idea/
-
-# CSV / TXT uploads (your test/demo data)
-*.csv
-*.txt
-
-# Optional: screenshots/videos (if you don't want them in repo)
-*.mp4
-*.mov
-*.png
-*.jpg
