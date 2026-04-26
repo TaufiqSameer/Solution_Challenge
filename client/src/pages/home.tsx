@@ -1,10 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ShieldAlert, Menu, X, ArrowRight, Map, Brain, Zap, Lock } from "lucide-react";
-import { login } from "../services/auth"
+import {
+  ShieldAlert,
+  Menu,
+  X,
+  ArrowRight,
+  Map,
+  Brain,
+  Zap,
+  Lock,
+} from "lucide-react";
+import { login } from "../services/auth";
 
-const DEMO_EMAIL = "coordinator@resourceiq.org";
-const DEMO_PASSWORD = "demo1234";
+// const DEMO_EMAIL = "coordinator@resourceiq.org";
+// const DEMO_PASSWORD = "demo1234";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -15,25 +24,23 @@ const Home = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-    setLoading(true)
+    e.preventDefault();
+    setError("");
+    setLoading(true);
     try {
-      await login(email, password)
-      setLoginOpen(false)
-      navigate("/dashboard")
+      await login(email, password);
+      setLoginOpen(false);
+      navigate("/dashboard");
     } catch (err: any) {
-      setError("Invalid email or password. Please try again.")
+      setError("Invalid email or password. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-[#0f1115] text-white font-sans overflow-x-hidden">
-
       {/* LOGIN MODAL */}
       {loginOpen && (
         <div
@@ -56,8 +63,12 @@ const Home = () => {
                 <Lock size={18} />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-white">Coordinator Login</h2>
-                <p className="text-slate-500 text-xs">ResourceIQ secure access</p>
+                <h2 className="text-lg font-bold text-white">
+                  Coordinator Login
+                </h2>
+                <p className="text-slate-500 text-xs">
+                  ResourceIQ secure access
+                </p>
               </div>
             </div>
 
@@ -104,7 +115,9 @@ const Home = () => {
                 {loading ? (
                   <span className="animate-pulse">Authenticating...</span>
                 ) : (
-                  <>Sign in <ArrowRight size={16} /></>
+                  <>
+                    Sign in <ArrowRight size={16} />
+                  </>
                 )}
               </button>
             </form>
@@ -113,7 +126,9 @@ const Home = () => {
               <p className="text-xs text-slate-500 mb-1 font-semibold uppercase tracking-wider">
                 Demo credentials
               </p>
-              <p className="text-xs text-slate-400">coordinator@resourceiq.org</p>
+              <p className="text-xs text-slate-400">
+                coordinator@resourceiq.org
+              </p>
               <p className="text-xs text-slate-400">demo1234</p>
             </div>
           </div>
@@ -134,9 +149,15 @@ const Home = () => {
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-8 text-sm text-slate-400">
-            <a href="#features" className="hover:text-white transition">Features</a>
-            <a href="#how-it-works" className="hover:text-white transition">How it works</a>
-            <a href="#about" className="hover:text-white transition">About</a>
+            <a href="#features" className="hover:text-white transition">
+              Features
+            </a>
+            <a href="#how-it-works" className="hover:text-white transition">
+              How it works
+            </a>
+            <a href="#about" className="hover:text-white transition">
+              About
+            </a>
           </div>
 
           <div className="hidden md:flex items-center gap-3">
@@ -166,11 +187,29 @@ const Home = () => {
         {/* Mobile menu */}
         {menuOpen && (
           <div className="md:hidden bg-[#161920] border-t border-white/5 px-6 py-4 space-y-4">
-            <a href="#features" className="block text-sm text-slate-400 hover:text-white transition">Features</a>
-            <a href="#how-it-works" className="block text-sm text-slate-400 hover:text-white transition">How it works</a>
-            <a href="#about" className="block text-sm text-slate-400 hover:text-white transition">About</a>
+            <a
+              href="#features"
+              className="block text-sm text-slate-400 hover:text-white transition"
+            >
+              Features
+            </a>
+            <a
+              href="#how-it-works"
+              className="block text-sm text-slate-400 hover:text-white transition"
+            >
+              How it works
+            </a>
+            <a
+              href="#about"
+              className="block text-sm text-slate-400 hover:text-white transition"
+            >
+              About
+            </a>
             <button
-              onClick={() => { setMenuOpen(false); setLoginOpen(true); }}
+              onClick={() => {
+                setMenuOpen(false);
+                setLoginOpen(true);
+              }}
               className="w-full text-sm bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-xl font-semibold"
             >
               Sign in
@@ -198,8 +237,8 @@ const Home = () => {
 
           <p className="text-slate-400 max-w-2xl mx-auto mb-10 text-lg leading-relaxed">
             ResourceIQ uses AI to detect where volunteers are wrongly deployed,
-            visualize demand-supply gaps in real time, and prescribe
-            data-backed reallocation decisions.
+            visualize demand-supply gaps in real time, and prescribe data-backed
+            reallocation decisions.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -208,10 +247,17 @@ const Home = () => {
               className="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-xl font-semibold text-lg transition-all flex items-center justify-center gap-2 group"
             >
               Launch Dashboard
-              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              <ArrowRight
+                size={18}
+                className="group-hover:translate-x-1 transition-transform"
+              />
             </button>
             <button
-              onClick={() => document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() =>
+                document
+                  .getElementById("how-it-works")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
               className="bg-white/5 hover:bg-white/10 border border-white/10 px-8 py-4 rounded-xl font-semibold text-lg transition-all"
             >
               See how it works
@@ -232,7 +278,9 @@ const Home = () => {
             <div className="w-px bg-white/10"></div>
             <div>
               <p className="text-3xl font-black text-red-400">48</p>
-              <p className="text-xs text-slate-500 mt-1">Misallocations detected</p>
+              <p className="text-xs text-slate-500 mt-1">
+                Misallocations detected
+              </p>
             </div>
             <div className="w-px bg-white/10"></div>
             <div>
@@ -244,53 +292,85 @@ const Home = () => {
       </section>
 
       {/* FEATURES */}
-      <section id="features" className="py-24 px-6 max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-black mb-4">Everything you need</h2>
-          <p className="text-slate-400 max-w-xl mx-auto">
-            A complete intelligence layer for NGO coordinators managing volunteer deployment at scale.
-          </p>
-        </div>
+<section id="features" className="py-24 px-6">
+<div className="max-w-7xl mx-auto">
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <FeatureCard
-            icon={<Brain size={24} />}
-            color="bg-blue-600/10 text-blue-400 border-blue-500/20"
-            title="AI Data Ingestion"
-            desc="Upload CSV or PDF field reports. Gemini AI automatically extracts, normalizes, and scores every zone."
-          />
-          <FeatureCard
-            icon={<Map size={24} />}
-            color="bg-emerald-600/10 text-emerald-400 border-emerald-500/20"
-            title="Live Heatmaps"
-            desc="See demand vs supply gaps visualized geographically. Critical zones glow red. Overstaffed zones show instantly."
-          />
-          <FeatureCard
-            icon={<Zap size={24} />}
-            color="bg-orange-600/10 text-orange-400 border-orange-500/20"
-            title="Smart Prescriptions"
-            desc="The allocation engine analyzes urgency, skills, history, and capacity — then tells you exactly where to move people."
-          />
-        </div>
-      </section>
+  {/* HEADER */}
+  <div className="flex flex-col items-center text-center mb-16">
+    <h2 className="text-4xl font-black mb-4">
+      Everything you need
+    </h2>
+
+    <p className="text-slate-400 max-w-lg">
+      A complete intelligence layer for NGO coordinators managing
+      volunteer deployment at scale.
+    </p>
+  </div>
+
+  {/* GRID */}
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <FeatureCard
+      icon={<Brain size={24} />}
+      color="bg-blue-600/10 text-blue-400 border-blue-500/20"
+      title="AI Data Ingestion"
+      desc="Upload CSV or PDF field reports. Gemini AI automatically extracts, normalizes, and scores every zone."
+    />
+
+    <FeatureCard
+      icon={<Map size={24} />}
+      color="bg-emerald-600/10 text-emerald-400 border-emerald-500/20"
+      title="Live Heatmaps"
+      desc="See demand vs supply gaps visualized geographically. Critical zones glow red. Overstaffed zones show instantly."
+    />
+
+    <FeatureCard
+      icon={<Zap size={24} />}
+      color="bg-orange-600/10 text-orange-400 border-orange-500/20"
+      title="Smart Prescriptions"
+      desc="The allocation engine analyzes urgency, skills, history, and capacity — then tells you exactly where to move people."
+    />
+  </div>
+
+</div>
+</section>
 
       {/* HOW IT WORKS */}
       <section id="how-it-works" className="py-24 px-6 bg-[#161920]">
         <div className="max-w-4xl mx-auto text-center mb-16">
           <h2 className="text-4xl font-black mb-4">How it works</h2>
-          <p className="text-slate-400">From raw field data to actionable decisions in seconds.</p>
+          <p className="text-slate-400">
+            From raw field data to actionable decisions in seconds.
+          </p>
         </div>
 
         <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 relative">
           {[
-            { step: "01", title: "Upload", desc: "Drop in your field report CSV or PDF" },
-            { step: "02", title: "Analyze", desc: "Gemini AI structures and scores every zone" },
-            { step: "03", title: "Visualize", desc: "Heatmap shows misallocation at a glance" },
-            { step: "04", title: "Act", desc: "AI prescribes exact reallocation actions" },
+            {
+              step: "01",
+              title: "Upload",
+              desc: "Drop in your field report CSV or PDF",
+            },
+            {
+              step: "02",
+              title: "Analyze",
+              desc: "Gemini AI structures and scores every zone",
+            },
+            {
+              step: "03",
+              title: "Visualize",
+              desc: "Heatmap shows misallocation at a glance",
+            },
+            {
+              step: "04",
+              title: "Act",
+              desc: "AI prescribes exact reallocation actions",
+            },
           ].map((item, i) => (
             <div key={i} className="text-center relative">
               <div className="w-12 h-12 bg-blue-600/20 border border-blue-500/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-blue-400 font-black text-sm">{item.step}</span>
+                <span className="text-blue-400 font-black text-sm">
+                  {item.step}
+                </span>
               </div>
               <h3 className="font-bold text-white mb-2">{item.title}</h3>
               <p className="text-slate-500 text-sm">{item.desc}</p>
@@ -300,36 +380,60 @@ const Home = () => {
       </section>
 
       {/* ABOUT */}
-      <section id="about" className="py-24 px-6 max-w-4xl mx-auto text-center">
+      <section id="about" className="py-24 px-6">
         <h2 className="text-4xl font-black mb-6">Built for impact</h2>
-        <p className="text-slate-400 text-lg leading-relaxed max-w-2xl mx-auto mb-8">
-          ResourceIQ was built for the Google Solution Challenge to solve a real problem —
-          NGOs don't lack volunteers, they lack the intelligence to deploy them correctly.
-          We built an AI engine that detects misallocation and prescribes fixes before crises happen.
+        <p className="text-slate-400 text-lg leading-relaxed mb-8">
+          ResourceIQ was built for the Google Solution Challenge to solve a real
+          problem — NGOs don't lack volunteers, they lack the intelligence to
+          deploy them correctly. We built an AI engine that detects
+          misallocation and prescribes fixes before crises happen.
         </p>
-        <div className="flex gap-4 justify-center flex-wrap">
-          <span className="px-4 py-2 bg-blue-600/10 border border-blue-500/20 rounded-full text-blue-400 text-xs font-semibold">Gemini API</span>
-          <span className="px-4 py-2 bg-emerald-600/10 border border-emerald-500/20 rounded-full text-emerald-400 text-xs font-semibold">Google Maps</span>
-          <span className="px-4 py-2 bg-orange-600/10 border border-orange-500/20 rounded-full text-orange-400 text-xs font-semibold">Vertex AI</span>
-          <span className="px-4 py-2 bg-purple-600/10 border border-purple-500/20 rounded-full text-purple-400 text-xs font-semibold">Firestore</span>
-          <span className="px-4 py-2 bg-slate-600/10 border border-slate-500/20 rounded-full text-slate-400 text-xs font-semibold">React + TypeScript</span>
+        <div className="flex flex-wrap justify-center gap-3 mt-6">
+          <span className="px-4 py-2 bg-blue-600/10 border border-blue-500/20 rounded-full text-blue-400 text-xs font-semibold">
+            Gemini API
+          </span>
+          <span className="px-4 py-2 bg-emerald-600/10 border border-emerald-500/20 rounded-full text-emerald-400 text-xs font-semibold">
+            Google Maps
+          </span>
+          <span className="px-4 py-2 bg-orange-600/10 border border-orange-500/20 rounded-full text-orange-400 text-xs font-semibold">
+            Vertex AI
+          </span>
+          <span className="px-4 py-2 bg-purple-600/10 border border-purple-500/20 rounded-full text-purple-400 text-xs font-semibold">
+            Firestore
+          </span>
+          <span className="px-4 py-2 bg-slate-600/10 border border-slate-500/20 rounded-full text-slate-400 text-xs font-semibold">
+            React + TypeScript
+          </span>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-24 px-6 text-center bg-[#161920] border-t border-white/5">
-        <h2 className="text-4xl font-black mb-4">Ready to take control?</h2>
-        <p className="text-slate-400 mb-8 max-w-xl mx-auto">
-          Stop making allocation decisions on gut feel. Start making them on data.
-        </p>
-        <button
-          onClick={() => setLoginOpen(true)}
-          className="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-xl font-bold text-lg transition-all inline-flex items-center gap-2 group"
-        >
-          Launch ResourceIQ
-          <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-        </button>
-      </section>
+<section className="py-24 px-6 bg-[#161920] border-t border-white/5">
+<div className="max-w-4xl mx-auto flex flex-col items-center text-center">
+
+  <h2 className="text-4xl font-black mb-4">
+    Ready to take control?
+  </h2>
+
+  <p className="text-slate-400 mb-8 max-w-lg">
+    Stop making allocation decisions on gut feel. Start making them on data.
+  </p>
+
+  <div className="flex justify-center">
+    <button
+      onClick={() => setLoginOpen(true)}
+      className="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-xl font-bold text-lg transition-all flex items-center gap-2 group"
+    >
+      Launch ResourceIQ
+      <ArrowRight
+        size={18}
+        className="group-hover:translate-x-1 transition-transform"
+      />
+    </button>
+  </div>
+
+</div>
+</section>
 
       {/* FOOTER */}
       <footer className="border-t border-white/5 px-6 py-8">
@@ -338,7 +442,9 @@ const Home = () => {
             <div className="w-6 h-6 bg-blue-600 rounded-md flex items-center justify-center">
               <ShieldAlert size={14} />
             </div>
-            <span className="text-sm font-bold">Resource<span className="text-blue-500">IQ</span></span>
+            <span className="text-sm font-bold">
+              Resource<span className="text-blue-500">IQ</span>
+            </span>
           </div>
           <p className="text-slate-600 text-xs">
             Built for Google Solution Challenge 2026
@@ -351,7 +457,9 @@ const Home = () => {
 
 const FeatureCard = ({ icon, color, title, desc }: any) => (
   <div className="bg-[#161920] border border-white/5 rounded-2xl p-6 hover:border-white/10 transition-all group">
-    <div className={`w-12 h-12 rounded-xl border flex items-center justify-center mb-4 ${color}`}>
+    <div
+      className={`w-12 h-12 rounded-xl border flex items-center justify-center mb-4 ${color}`}
+    >
       {icon}
     </div>
     <h3 className="font-bold text-white mb-2 text-lg">{title}</h3>

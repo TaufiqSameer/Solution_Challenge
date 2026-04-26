@@ -21,7 +21,7 @@ we need smart matching
 dashboard making 
 
 
-curl "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=AIzaSyACu1tqFumpLq9ju_hTCruOnCuj4-yEZnc" \
+curl "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key" \
   -H "Content-Type: application/json" \
   -X POST \
   -d '{
